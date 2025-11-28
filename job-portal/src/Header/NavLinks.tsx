@@ -19,8 +19,8 @@ const NavLinks = () => {
                     <div
                         key={index}
                         className={`${activeLink
-                                ? "border-bright-sun-400 text-bright-sun-400"
-                                : "border-transparent"
+                            ? "border-bright-sun-400 text-bright-sun-400"
+                            : "border-transparent"
                             } border-t-[3px] h-full flex items-center`}
                     >
                         <Link to={link.url}>{link.name}</Link>
