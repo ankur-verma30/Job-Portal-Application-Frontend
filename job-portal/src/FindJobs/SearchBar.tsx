@@ -36,7 +36,7 @@ const SearchBar = () => {
                 ))}
                 <Divider orientation="vertical" size="xs" />
                 <div className="w-1/5 [&_.mantine-Slider-label]:translate-y-1!">
-                    <div className="flex text-xs justify-between">
+                    <div className="flex text-sm justify-between">
                         <div>Salary</div>
                         <div>&#8377;  {value[0]} LPA - &#8377;  {value[1]} LPA</div>
                     </div>
@@ -44,7 +44,7 @@ const SearchBar = () => {
                         transition: 'skew-down',
                         duration: 150,
                         timingFunction: 'linear'
-                    }}  color="brightSun.4" size="xs" value={value} onChange={setValue}  labelAlwaysOn />
+                    }}  color="brightSun.4" size="xs" value={value} onChange={setValue}  />
                 </div>
             </div>
 
