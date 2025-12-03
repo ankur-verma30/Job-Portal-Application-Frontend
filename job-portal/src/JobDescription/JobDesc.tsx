@@ -11,18 +11,18 @@ const JobDesc = (props: any) => {
             <div className="flex justify-between ">
                 <div className="flex gap-2 items-center">
                     <div className="p-3 bg-mine-shaft-800 rounded-xl">
-                        <img className="h-14 " src={`/JobPortalResources/Icons/${props.company}.png`} alt="" />
+                        <img className="h-14 " src={`/JobPortalResources/Icons/Google.png`} alt="" />
                     </div>
                     <div className="flex flex-col gap-1">
                         <div className="font-semibold text-2xl">{props.jobTitle}</div>
-                        <div className="text-lg text-mine-shaft-300 ">{props.company} &bull; 3 days ago &bull; {props.applicants} Applicants</div>
+                        <div className="text-lg text-mine-shaft-300 ">Google &bull; 3 days ago &bull;  10k+ Applicants</div>
                     </div>
                 </div>
                 <div className="flex flex-col gap-2 items-center">
                     <Link to="/apply-job">
-                        <Button color="brightSun.4" size="sm" variant="light">Apply Now</Button>
+                        <Button color="brightSun.4" size="sm" variant="light">{props.edit ? "Edit" : "Apply Now"}</Button>
                     </Link>
-                    <IconBookmark stroke={1.5} className="text-bright-sun-400 cursor-pointer" />
+                    {!props.edit ? <IconBookmark stroke={1.5} className="text-bright-sun-400 cursor-pointer" />: <Button color="red.5" size="sm" variant="outline">Delete</Button>}
                 </div>
             </div>
             <Divider my="xl" />
