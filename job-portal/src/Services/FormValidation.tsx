@@ -20,4 +20,18 @@ const signupValidation = (name: string, value: string) => {
     }
 }
 
-export { signupValidation };
+const loginValidation=(name:string,value:string)=>{
+ switch (name) {
+        case "email":
+            if (!value) return "Email is required";
+            else return "";
+        case "password":
+            if (!value) return "Password is required";
+            else return "";
+            
+        default:
+            return "";
+    }
+}
+
+export { signupValidation, loginValidation };

@@ -35,7 +35,7 @@ const App = () => {
   })
   return (
     <MantineProvider theme={theme} defaultColorScheme='dark' >
-      <Notifications/>
+      <Notifications position='top-center' zIndex={1000}/>
       <BrowserRouter>
       <div className='relative '>
         <Header />

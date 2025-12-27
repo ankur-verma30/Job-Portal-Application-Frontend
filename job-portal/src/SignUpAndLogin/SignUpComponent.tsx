@@ -1,7 +1,7 @@
 import { Anchor, Button, Checkbox, Group, PasswordInput, Radio, rem, TextInput } from "@mantine/core"
-import { IconLock, IconMail } from "@tabler/icons-react"
+import { IconCheck, IconLock, IconMail, IconX } from "@tabler/icons-react"
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { registerUser } from "../Services/UserService"
 import { signupValidation } from "../Services/FormValidation"
 import { notifications } from "@mantine/notifications"
@@ -17,8 +17,9 @@ let passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%
 
 
 const SignUpComponent = () => {
-    const [data, setData] = useState<{[key: string]: string}>(form);
-    const [formError, setFormError] = useState<{[key: string]: string}>(form);
+    const navigate=useNavigate();
+    const [data, setData] = useState<{ [key: string]: string }>(form);
+    const [formError, setFormError] = useState<{ [key: string]: string }>(form);
 
     const handleChange = (event: any) => {
         if (typeof (event) === "string") {
@@ -36,13 +37,13 @@ const SignUpComponent = () => {
             [name]: signupValidation(name, value)
         })
         if (name === "password" && data.confirmPassword) {
-            let err="";
-            if (data.confirmPassword !== value) { err="Passwords do not match";}
+            let err = "";
+            if (data.confirmPassword !== value) { err = "Passwords do not match"; }
             setFormError({
-            ...formError,
-            [name]: signupValidation(name, value),
-            confirmPassword: err
-        })
+                ...formError,
+                [name]: signupValidation(name, value),
+                confirmPassword: err
+            })
         }
         if (name === "confirmPassword") {
             if (value !== data.password) {
@@ -50,7 +51,7 @@ const SignUpComponent = () => {
                     ...formError,
                     [name]: "Passwords do not match"
                 })
-            }else {
+            } else {
                 setFormError({
                     ...formError,
                     [name]: ""
@@ -60,28 +61,46 @@ const SignUpComponent = () => {
     }
 
     const handleSubmit = () => {
-        let valid=true;
-        let newFormError:{[key: string]: string}={};
+        let valid = true;
+        let newFormError: { [key: string]: string } = {};
 
-        for(let key in data){
-            if(key==="accountType") continue;
-            if(key!=="confirmPassword") newFormError[key]=signupValidation(key,data[key]);
-            else if(data[key]!==data["password"]) newFormError[key]="Passwords do not match";
-            if(newFormError[key]) valid=false;
-            
+        for (let key in data) {
+            if (key === "accountType") continue;
+            if (key !== "confirmPassword") newFormError[key] = signupValidation(key, data[key]);
+            else if (data[key] !== data["password"]) newFormError[key] = "Passwords do not match";
+            if (newFormError[key]) valid = false;
+
         }
         setFormError(newFormError);
-        if(!valid) return;
-         notifications.show({
-          title: 'User Registered Successfully',
-          message: 'Your account has been created 🌟',
-        })
-        registerUser(data).then((res) => {
-            console.log(res);
-           
-        }).catch((error) => {
-            console.log(error);
-        })
+        if (valid == true) {
+            registerUser(data).then((res) => {
+                setData(form);
+                console.log(res);
+                notifications.show({
+                    title: 'User Registered Successfully',
+                    message: 'Redirecting to Login Page ...',
+                    withCloseButton: true,
+                    icon: <IconCheck style={{ width: "90%", height: "90%" }} />,
+                    color: "teal",
+                    withBorder: true,
+                    className: "border-green-500!"
+                })
+                setTimeout(()=>{
+                    navigate("/login");
+                },2000)
+            }).catch((error) => {
+                console.log(error);
+                notifications.show({
+                    title: 'Registration Failed',
+                    message: error.response.data.errorMessage,
+                    withCloseButton: true,
+                    icon: <IconX style={{ width: "90%", height: "90%" }} />,
+                    color: "red",
+                    withBorder: true,
+                    className: "border-red-500!"
+                })
+            })
+        }
     }
     return (
         <div className="w-1/2 px-20 flex flex-col justify-center gap-3">
@@ -92,8 +111,8 @@ const SignUpComponent = () => {
 
             <PasswordInput value={data.password} name="password" error={formError.password} onChange={handleChange} leftSection={<IconLock style={{ width: rem(16), height: rem(16) }} stroke={1.5} />} label="Password" placeholder="Enter your password" withAsterisk />
             {
-            <PasswordInput value={data.confirmPassword} error={formError.confirmPassword} name="confirmPassword" onChange={handleChange} disabled={!passwordRegex.test(data.password)} leftSection={<IconLock style={{ width: rem(16), height: rem(16) }} stroke={1.5} />} label=" Confirm Password" placeholder="Confirm your password" withAsterisk />
-}
+                <PasswordInput value={data.confirmPassword} error={formError.confirmPassword} name="confirmPassword" onChange={handleChange} disabled={!passwordRegex.test(data.password)} leftSection={<IconLock style={{ width: rem(16), height: rem(16) }} stroke={1.5} />} label=" Confirm Password" placeholder="Confirm your password" withAsterisk />
+            }
             <Radio.Group
                 value={data.accountType} onChange={handleChange} name="accountType"
                 label="You are ?"
@@ -107,7 +126,7 @@ const SignUpComponent = () => {
 
             <Checkbox autoContrast label={<>I accept{' '} <Anchor>terms & conditions</Anchor></>} />
             <Button onClick={handleSubmit} autoContrast variant="filled">Sign Up</Button>
-            <div className="mx-auto">Already have an account? <Link to="/login" className="text-bright-sun-400 hover:underline hover:text-lg">Login</Link></div>
+            <div className="mx-auto">Already have an account? <span className="text-bright-sun-400 hover:underline cursor-pointer hover:text-lg" onClick={()=>{navigate("/login");setFormError(form); setData(form)}}>Login</span></div>
 
         </div>
     )
